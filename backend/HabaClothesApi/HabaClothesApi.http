@@ -1,0 +1,6 @@
+@HabaClothesApi_HostAddress = http://localhost:5199
+
+GET {{HabaClothesApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
