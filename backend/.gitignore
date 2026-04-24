@@ -1,0 +1,45 @@
+# Build outputs
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider/Resharper
+.idea/
+*.sln.iml
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# OS
+.DS_Store
+Thumbs.db
+
+# EF Core
+**/Migrations/*.Designer.cs
+**/Migrations/*.Designer.cs.meta
+
+# Logs
+*.log
+
+# NUnit
+*.nunit
+
+# NuGet
+*.nupkg
+**/packages/
+
+# Publish
+**/publish/
+
+# Secrets
+secrets.json
+appsettings*.json
+!appsettings.example.json
