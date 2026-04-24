@@ -1,46 +1,52 @@
-# Build outputs
-bin/
-obj/
+node_modules
 
-# Visual Studio
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
+# Next.js
+.next
+out
+.vercel
 
-# Visual Studio Code
-.vscode/
+# Build output
+dist
+build
 
-# Rider/Resharper
-.idea/
-*.sln.iml
-_ReSharper*/
-*.[Rr]e[Ss]harper
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency artifacts
+.pnp
+.pnp.js
+.pnp.cjs
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage
+
+# Cache
+.cache
+.turbo
+.swc
 
 # OS
 .DS_Store
 Thumbs.db
 
-# EF Core
-**/Migrations/*.Designer.cs
-**/Migrations/*.Designer.cs.meta
+# Editor
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
 
-# Logs
-*.log
-
-# NUnit
-*.nunit
-
-# NuGet
-*.nupkg
-**/packages/
-
-# Publish
-**/publish/
-
-# Secrets
-secrets.json
-appsettings.*.json
-!appsettings.Development.json
-!appsettings.json
+# Misc
+*.pem
