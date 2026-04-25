@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 var webRootPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
@@ -89,7 +90,15 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
-    await DbSeeder.SeedAsync(db);
+
+    try
+    {
+        await DbSeeder.SeedAsync(db);
+    }
+    catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UndefinedTable)
+    {
+        app.Logger.LogWarning(ex, "Skipping seed because a required table is missing in the target database. Check connection string and migration state.");
+    }
 }
 
 if (app.Environment.IsDevelopment())
