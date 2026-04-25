@@ -1,14 +1,28 @@
 using HabaClothes.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace HabaClothes.Api.Data;
 
 public static class DbSeeder
 {
-    public static async Task SeedAsync(AppDbContext db)
+    public static async Task SeedAsync(AppDbContext db, ILogger logger, CancellationToken cancellationToken = default)
     {
-        if (await db.Users.AnyAsync())
+        if (!await TableExistsAsync(db, "Users", cancellationToken))
+        {
+            logger.LogWarning("Skipping seed because required table 'Users' does not exist. Database migration history may be out of sync with actual schema.");
+            return;
+        }
+
+        if (!await TableExistsAsync(db, "Products", cancellationToken))
+        {
+            logger.LogWarning("Skipping seed because required table 'Products' does not exist. Database migration history may be out of sync with actual schema.");
+            return;
+        }
+
+        if (await db.Users.AnyAsync(cancellationToken))
         {
             return;
         }
@@ -52,6 +66,43 @@ public static class DbSeeder
         db.Users.AddRange(admin, customer);
         db.Products.AddRange(products);
 
-        await db.SaveChangesAsync();
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
+    private static async Task<bool> TableExistsAsync(AppDbContext db, string tableName, CancellationToken cancellationToken)
+    {
+        var connection = db.Database.GetDbConnection();
+        var shouldCloseConnection = connection.State != ConnectionState.Open;
+
+        if (shouldCloseConnection)
+        {
+            await connection.OpenAsync(cancellationToken);
+        }
+
+        try
+        {
+            await using var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM information_schema.tables
+                    WHERE table_schema = 'public' AND table_name = @tableName
+                )";
+
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "@tableName";
+            parameter.Value = tableName;
+            command.Parameters.Add(parameter);
+
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+            return result is bool exists && exists;
+        }
+        finally
+        {
+            if (shouldCloseConnection)
+            {
+                await connection.CloseAsync();
+            }
+        }
     }
 }
