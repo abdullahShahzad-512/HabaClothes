@@ -88,12 +88,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var logger = scope.ServiceProvider
-        .GetRequiredService<ILoggerFactory>()
-        .CreateLogger("DbSeeder");
-
     await db.Database.MigrateAsync();
-    await DbSeeder.SeedAsync(db, logger);
+    await DbSeeder.SeedAsync(db);
 }
 
 if (app.Environment.IsDevelopment())

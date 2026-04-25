@@ -15,6 +15,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+*.log
 
 # Dependency artifacts
 .pnp
@@ -36,6 +37,10 @@ coverage
 .cache
 .turbo
 .swc
+.next/cache
+.eslintcache
+.stylelintcache
+.pnpm-store
 
 # OS
 .DS_Store
@@ -47,6 +52,8 @@ Thumbs.db
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+.idea/
+*.code-workspace
 
 # Misc
 *.pem
