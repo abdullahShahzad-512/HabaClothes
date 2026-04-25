@@ -2,16 +2,18 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface CategoryProps {
     name: string;
     href: string;
     label: string;
-    gradient: string;
+    gradient?: string;
+    image?: string;
     index: number;
 }
 
-const CategoryCard = ({ name, href, label, gradient, index }: CategoryProps) => {
+const CategoryCard = ({ name, href, label, gradient, image, index }: CategoryProps) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -34,15 +36,25 @@ const CategoryCard = ({ name, href, label, gradient, index }: CategoryProps) => 
                     {/* Background */}
                     <div className="absolute inset-0 bg-bone" />
 
-                    {/* Animated gradient */}
-                    <motion.div
-                        className="absolute inset-0 opacity-60"
-                        style={{
-                            background: gradient,
-                        }}
-                        whileHover={{ opacity: 0.8 }}
-                        transition={{ duration: 0.3 }}
-                    />
+                    {/* Image or Gradient Background */}
+                    {image ? (
+                        <Image
+                            src={image}
+                            alt={name}
+                            fill
+                            className="object-cover w-full h-full"
+                            priority={index === 0}
+                        />
+                    ) : (
+                        <motion.div
+                            className="absolute inset-0 opacity-60"
+                            style={{
+                                background: gradient,
+                            }}
+                            whileHover={{ opacity: 0.8 }}
+                            transition={{ duration: 0.3 }}
+                        />
+                    )}
 
                     {/* Overlay gradient */}
                     <motion.div
@@ -111,24 +123,24 @@ const CategoryCard = ({ name, href, label, gradient, index }: CategoryProps) => 
 export function AnimatedCategories() {
     const categories = [
         {
-            name: "Collections",
-            href: "/products?category=collections",
+            name: "KIDS",
+            href: "/products?category=Kids",
             label: "Curated for Her",
-            gradient: "linear-gradient(135deg, #B5936B 0%, #7A8C72 100%)",
+            image: "/images/kids-hero.jpg",
             index: 0,
         },
         {
-            name: "Seasonal",
-            href: "/products?category=seasonal",
+            name: "TEENS",
+            href: "/products?category=Teens",
             label: "Latest Trends",
-            gradient: "linear-gradient(135deg, #9B4A2A 0%, #B5936B 100%)",
+            image: "/images/teens-hero.png",
             index: 1,
         },
         {
-            name: "Basics",
-            href: "/products?category=basics",
+            name: "COLLECTION",
+            href: "/products",
             label: "Essentials",
-            gradient: "linear-gradient(135deg, #C5CBD8 0%, #7A8C72 100%)",
+            image: "/images/collection-hero.jpg",
             index: 2,
         },
     ];

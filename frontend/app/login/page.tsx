@@ -93,9 +93,9 @@ export default function LoginPage() {
                 <input type="checkbox" className="w-3 h-3 accent-ink" />
                 <span className="font-mono text-xs text-ink/50">Remember me</span>
               </label>
-              <a href="#" className="font-mono text-xs text-ink/50 hover:text-ink underline transition-colors">
+              {/* <a href="#" className="font-mono text-xs text-ink/50 hover:text-ink underline transition-colors">
                 Forgot password?
-              </a>
+              </a> */}
             </div>
 
             {error && (

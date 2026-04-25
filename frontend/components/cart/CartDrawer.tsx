@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cartStore";
 
-const WHATSAPP_BUSINESS_NUMBER = "03123456789";
+const WHATSAPP_BUSINESS_NUMBER = "+923195878476";
 
 const getWhatsAppPhone = (phone: string) => {
     const digits = phone.replace(/\D/g, "");

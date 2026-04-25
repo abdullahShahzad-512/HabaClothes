@@ -6,21 +6,77 @@ import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { motion, AnimatePresence } from "framer-motion";
 
-const categories = ["Collections", "Seasonal", "Basics", "Accessories", "New Arrivals"];
+interface NavItem {
+    label: string;
+    href?: string;
+    submenu?: { label: string; href: string }[];
+}
+
+const navItems: NavItem[] = [
+    {
+        label: "Kids",
+        submenu: [
+            { label: "Eastern", href: "/products?category=kids-eastern" },
+            { label: "Western", href: "/products?category=kids-western" },
+            { label: "Festive", href: "/products?category=kids-festive" },
+            { label: "Sleepwear", href: "/products?category=kids-sleepwear" },
+        ],
+    },
+    {
+        label: "Teens",
+        submenu: [
+            { label: "Eastern", href: "/products?category=teens-eastern" },
+            { label: "Western", href: "/products?category=teens-western" },
+            { label: "Festive", href: "/products?category=teens-festive" },
+            { label: "Sleepwear", href: "/products?category=teens-sleepwear" },
+        ],
+    },
+    {
+        label: "Festive Edit",
+        href: "/products?category=festive-edit",
+    },
+    {
+        label: "Accessories",
+        submenu: [
+            { label: "Bags", href: "/products?category=accessories-bags" },
+            { label: "Hair Accessories", href: "/products?category=accessories-hair" },
+            { label: "Jewelry", href: "/products?category=accessories-jewelry" },
+        ],
+    },
+];
 
 export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+    const [hoverTimeoutId, setHoverTimeoutId] = useState<NodeJS.Timeout | null>(null);
     const { toggleCart, itemCount } = useCartStore();
     const { isAuthenticated, user, logout } = useAuthStore();
     const count = itemCount();
 
+    const handleHoverStart = (categoryLabel: string) => {
+        if (hoverTimeoutId) {
+            clearTimeout(hoverTimeoutId);
+            setHoverTimeoutId(null);
+        }
+        setHoveredCategory(categoryLabel);
+    };
+
+    const handleHoverEnd = () => {
+        const timeoutId = setTimeout(() => {
+            setHoveredCategory(null);
+        }, 150);
+        setHoverTimeoutId(timeoutId);
+    };
+
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener("scroll", onScroll);
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            if (hoverTimeoutId) clearTimeout(hoverTimeoutId);
+        };
+    }, [hoverTimeoutId]);
 
     const headerClass = scrolled
         ? "bg-chalk/95 backdrop-blur-sm shadow-md"
@@ -92,32 +148,80 @@ export function Navbar() {
 
                         {/* Desktop Nav with hover effects */}
                         <nav className="hidden md:flex items-center gap-8">
-                            {categories.map((cat, index) => (
+                            {navItems.map((item, index) => (
                                 <motion.div
-                                    key={cat}
-                                    onHoverStart={() => setHoveredCategory(cat)}
-                                    onHoverEnd={() => setHoveredCategory(null)}
+                                    key={item.label}
+                                    onHoverStart={() => handleHoverStart(item.label)}
+                                    onHoverEnd={() => handleHoverEnd()}
                                     initial={{ opacity: 0, y: -10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{
                                         delay: index * 0.05,
                                         duration: 0.4,
                                     }}
+                                    className="relative group"
                                 >
-                                    <Link
-                                        href={`/products?category=${cat.toLowerCase().replace(" ", "-")}`}
-                                        className={`font-mono text-xs tracking-widest uppercase transition-colors duration-200 relative ${mutedTextClass}`}
-                                    >
-                                        {cat}
-                                        <motion.span
-                                            className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-clay to-transparent"
-                                            initial={{ width: 0 }}
-                                            animate={{
-                                                width: hoveredCategory === cat ? "100%" : 0,
-                                            }}
-                                            transition={{ duration: 0.3 }}
-                                        />
-                                    </Link>
+                                    {item.href && !item.submenu ? (
+                                        <Link
+                                            href={item.href}
+                                            className={`font-mono text-xs tracking-widest uppercase transition-colors duration-200 relative ${mutedTextClass}`}
+                                        >
+                                            {item.label}
+                                            <motion.span
+                                                className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-clay to-transparent"
+                                                initial={{ width: 0 }}
+                                                animate={{
+                                                    width: hoveredCategory === item.label ? "100%" : 0,
+                                                }}
+                                                transition={{ duration: 0.3 }}
+                                            />
+                                        </Link>
+                                    ) : (
+                                        <button
+                                            className={`font-mono text-xs tracking-widest uppercase transition-colors duration-200 relative flex items-center gap-1 ${mutedTextClass}`}
+                                        >
+                                            {item.label}
+                                            {item.submenu && (
+                                                <motion.span
+                                                    animate={{
+                                                        rotate: hoveredCategory === item.label ? 180 : 0,
+                                                    }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <ChevronDown size={12} />
+                                                </motion.span>
+                                            )}
+                                            <motion.span
+                                                className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-clay to-transparent"
+                                                initial={{ width: 0 }}
+                                                animate={{
+                                                    width: hoveredCategory === item.label ? "100%" : 0,
+                                                }}
+                                                transition={{ duration: 0.3 }}
+                                            />
+                                        </button>
+                                    )}
+
+                                    {/* Dropdown submenu */}
+                                    {item.submenu && (
+                                        <div
+                                            className={`absolute top-full left-0 mt-2 bg-chalk border border-bone shadow-lg min-w-max overflow-hidden rounded-md ${
+                                                hoveredCategory === item.label
+                                                    ? "opacity-100 pointer-events-auto"
+                                                    : "opacity-0 pointer-events-none"
+                                            }`}
+                                        >
+                                            {item.submenu.map((subitem) => (
+                                                <Link
+                                                    key={subitem.label}
+                                                    href={subitem.href}
+                                                    className="block px-4 py-3 font-mono text-xs tracking-widest uppercase text-ink hover:bg-bone transition-colors"
+                                                >
+                                                    {subitem.label}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
                                 </motion.div>
                             ))}
                         </nav>
@@ -260,15 +364,63 @@ export function Navbar() {
                             exit="exit"
                         >
                             <motion.nav className="flex flex-col gap-6">
-                                {categories.map((cat) => (
-                                    <motion.div key={cat} variants={mobileItemVariants}>
-                                        <Link
-                                            href={`/products?category=${cat.toLowerCase().replace(" ", "-")}`}
-                                            onClick={() => setMobileOpen(false)}
-                                            className="font-mono text-sm tracking-widest uppercase text-ink/70 hover:text-ink transition-colors"
-                                        >
-                                            {cat}
-                                        </Link>
+                                {navItems.map((item) => (
+                                    <motion.div key={item.label} variants={mobileItemVariants}>
+                                        {item.submenu ? (
+                                            <div>
+                                                <button
+                                                    onClick={(e) => {
+                                                        setHoveredCategory(
+                                                            hoveredCategory === item.label ? null : item.label
+                                                        );
+                                                    }}
+                                                    className="font-mono text-sm tracking-widest uppercase text-ink/70 hover:text-ink transition-colors flex items-center justify-between w-full"
+                                                >
+                                                    {item.label}
+                                                    <motion.span
+                                                        animate={{
+                                                            rotate: hoveredCategory === item.label ? 180 : 0,
+                                                        }}
+                                                        transition={{ duration: 0.3 }}
+                                                    >
+                                                        <ChevronDown size={14} />
+                                                    </motion.span>
+                                                </button>
+                                                <AnimatePresence>
+                                                    {hoveredCategory === item.label && (
+                                                        <motion.div
+                                                            className="pl-4 mt-3 flex flex-col gap-3"
+                                                            initial={{ opacity: 0, height: 0 }}
+                                                            animate={{ opacity: 1, height: "auto" }}
+                                                            exit={{ opacity: 0, height: 0 }}
+                                                            transition={{ duration: 0.2 }}
+                                                        >
+                                                            {item.submenu.map((subitem) => (
+                                                                <Link
+                                                                    key={subitem.label}
+                                                                    href={subitem.href}
+                                                                    onClick={() => {
+                                                                        setMobileOpen(false);
+                                                                        setHoveredCategory(null);
+                                                                    }}
+                                                                    className="font-mono text-xs tracking-widest uppercase text-ink/60 hover:text-ink transition-colors"
+                                                                >
+                                                                    {subitem.label}
+                                                                </Link>
+                                                            ))}
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
+                                        ) : (
+                                            <Link
+                                                href={item.href || "#"}
+                                                onClick={() => setMobileOpen(false)}
+                                                className="font-mono text-sm tracking-widest uppercase text-ink/70 hover:text-ink transition-colors block"
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        )}
                                     </motion.div>
                                 ))}
                                 <motion.hr

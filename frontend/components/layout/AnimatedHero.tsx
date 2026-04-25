@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -39,7 +40,7 @@ export function AnimatedHero() {
     };
 
     return (
-        <section className="relative min-h-screen flex items-end pt-24 md:pt-28 pb-10 md:pb-14 px-6 md:px-12 overflow-hidden bg-gradient-to-br from-ink via-ink to-ink">
+        <section className="relative min-h-screen flex items-center pt-24 md:pt-0 pb-10 md:pb-0 overflow-hidden bg-gradient-to-br from-ink via-ink to-ink">
             {/* Background texture animation */}
             <motion.div
                 className="absolute inset-0 opacity-10"
@@ -86,106 +87,94 @@ export function AnimatedHero() {
                 }}
             />
 
-            <div className="relative z-10 max-w-screen-xl mx-auto w-full">
-                <motion.div
-                    className="max-w-3xl"
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    {/* Tag */}
-                    <motion.p
-                        className="font-mono text-xs tracking-[0.3em] uppercase text-clay mb-6"
-                        variants={itemVariants}
-                    >
-                        ✨ Spring / Summer 2025
-                    </motion.p>
-
-                    {/* Main heading with 3D effect */}
-                    <motion.div
-                        className="mb-8 overflow-hidden"
-                        variants={itemVariants}
-                    >
-                        <motion.h1
-                            className="font-display text-6xl md:text-8xl lg:text-9xl font-light text-chalk leading-none"
-                            animate={{
-                                backgroundPosition: ["0% 50%", "100% 50%"],
-                            }}
-                            transition={{
-                                duration: 5,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                            }}
-                        >
-                            Dress with
-                            <motion.br />
-                            <motion.em
-                                className="not-italic text-clay block"
-                                animate={{
-                                    backgroundPosition: ["0% 50%", "100% 50%"],
-                                }}
-                                transition={{
-                                    duration: 5,
-                                    repeat: Infinity,
-                                    ease: "easeInOut",
-                                    delay: 0.2,
-                                }}
-                            >
-                                intention.
-                            </motion.em>
-                        </motion.h1>
-                    </motion.div>
-
-                    {/* Description */}
-                    <motion.p
-                        className="font-body text-chalk/60 text-lg font-light max-w-md mb-10 leading-relaxed"
-                        variants={itemVariants}
-                    >
-                        Garments crafted for those who understand that true style lies in the details — and the silence between them.
-                    </motion.p>
-
-                    {/* CTA Buttons */}
-                    <motion.div
-                        className="flex flex-wrap gap-4"
-                        variants={itemVariants}
-                    >
+            {/* Main content grid */}
+            <div className="relative z-10 w-full h-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 h-full">
+                    {/* Left side - Text content */}
+                    <div className="flex items-center px-6 md:px-12 py-20 md:py-0">
                         <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            className="max-w-2xl"
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
                         >
-                            <Link href="/products" className="btn-primary">
-                                Explore Collection
-                            </Link>
-                        </motion.div>
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <Link
-                                href="/products?category=new-arrivals"
-                                className="btn-outline border-chalk text-chalk hover:bg-chalk hover:text-ink"
+                            {/* Main heading with 3D effect */}
+                            <motion.div
+                                className="mb-8 overflow-hidden"
+                                variants={itemVariants}
                             >
-                                New Arrivals
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-                </motion.div>
-            </div>
+                                <motion.h1
+                                    className="font-display text-6xl md:text-7xl lg:text-8xl font-light text-chalk leading-none"
+                                    animate={{
+                                        backgroundPosition: ["0% 50%", "100% 50%"],
+                                    }}
+                                    transition={{
+                                        duration: 5,
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                    }}
+                                >
+                                    Dress with
+                                    <motion.br />
+                                    <motion.em
+                                        className="not-italic text-clay block"
+                                        animate={{
+                                            backgroundPosition: ["0% 50%", "100% 50%"],
+                                        }}
+                                        transition={{
+                                            duration: 5,
+                                            repeat: Infinity,
+                                            ease: "easeInOut",
+                                            delay: 0.2,
+                                        }}
+                                    >
+                                        intention
+                                    </motion.em>
+                                </motion.h1>
+                            </motion.div>
 
-            {/* Scroll indicator with animation */}
-            <motion.div
-                className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-                animate={{ y: [0, 8, 0] }}
-                transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                }}
-            >
-                <div className="flex flex-col items-center gap-2">
-                    <span className="text-chalk text-xs font-mono tracking-widest uppercase opacity-60">Scroll</span>
-                    <ArrowRight size={16} className="text-chalk opacity-60 rotate-90" />
+                            {/* Description */}
+                            <motion.p
+                                className="font-body text-chalk/60 text-lg font-light max-w-md mb-10 leading-relaxed"
+                                variants={itemVariants}
+                            >
+                                Garments crafted for those who understand that true style lies in the details — and the silence between them.
+                            </motion.p>
+
+                            {/* CTA Buttons */}
+                            <motion.div
+                                className="flex flex-wrap gap-4"
+                                variants={itemVariants}
+                            >
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <Link href="/products" className="btn-primary ">
+                                        Explore Collection
+                                    </Link>
+                                </motion.div>
+                            </motion.div>
+                        </motion.div>
+                    </div>
+
+                    {/* Right side - Image */}
+                    <motion.div
+                        className="relative hidden md:block h-full min-h-screen"
+                        initial={{ opacity: 0, x: 40 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                    >
+                        <Image
+                            src="/images/hero-family.jpg"
+                            alt="Dress with intention - HabaClothes family collection"
+                            fill
+                            className="object-cover w-full h-full"
+                            priority
+                        />
+                    </motion.div>
                 </div>
-            </motion.div>
+            </div>
         </section>
     );
 }

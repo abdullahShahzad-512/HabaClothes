@@ -133,35 +133,16 @@ export default function HomePage() {
                                     repeat: Infinity,
                                 }}
                             >
-                                {/* Animated background pattern */}
-                                <motion.div
-                                    className="absolute inset-0 opacity-30"
-                                    style={{
-                                        background: "radial-gradient(circle 500px at 50% 50%, rgba(181, 147, 107, 0.3), transparent 80%)",
-                                    }}
-                                    animate={{
-                                        scale: [1, 1.2, 1],
-                                    }}
-                                    transition={{
-                                        duration: 4,
-                                        repeat: Infinity,
-                                    }}
+                                {/* Video Thumbnail Image */}
+                                <video
+                                    src="/videos/philosophy-video.mp4"
+                                    className="object-cover w-full h-full rounded-lg"
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    controls
                                 />
-
-                                <motion.p
-                                    className="font-display text-5xl md:text-6xl font-light text-chalk/20 relative z-10"
-                                    animate={{
-                                        y: [0, -10, 0],
-                                        scale: [1, 1.05, 1],
-                                    }}
-                                    transition={{
-                                        duration: 4,
-                                        repeat: Infinity,
-                                        ease: "easeInOut",
-                                    }}
-                                >
-                                    HABA
-                                </motion.p>
                             </motion.div>
                         </motion.div>
                     </div>
